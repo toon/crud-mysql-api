@@ -1,7 +1,7 @@
 // db.js
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('crud-data', 'root', '123456', {
+const sequelize = new Sequelize('crud-data', 'root', 'hi2o10', {
     host: 'localhost',
     dialect: 'mysql'
 });
