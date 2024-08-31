@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const ParMoeda = require('./ParMoeda');
-const Strategy = require('./Strategy');
 
 const ActiveOperation = sequelize.define('ActiveOperation', {
     ParMoedaId: {
@@ -16,7 +14,7 @@ const ActiveOperation = sequelize.define('ActiveOperation', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true,
-    }
+    },
 }, {
     timestamps: true
 });

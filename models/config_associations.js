@@ -13,3 +13,10 @@ Operation.belongsTo(ParMoeda, { foreignKey: 'ParMoedaId' });
 Operation.belongsTo(Strategy, { foreignKey: 'StrategyId' });
 ActiveOperation.belongsTo(ParMoeda, { foreignKey: 'ParMoedaId' });
 ActiveOperation.belongsTo(Strategy, { foreignKey: 'StrategyId' });
+
+module.exports = {
+    ParMoeda,
+    Operation,
+    ActiveOperation,
+    Strategy,
+}

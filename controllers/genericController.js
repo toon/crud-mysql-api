@@ -1,16 +1,41 @@
-const create = (Model) => async (req, res) => {
+const { Op } = require('sequelize');
+
+const getAll = (Model) => async (req, res) => {
     try {
-        const item = await Model.create(req.body);
-        res.status(201).json(item);
+        const query = req.query; // Captura os parâmetros de query da requisição
+        let where = {};
+
+        // Para cada campo em query, adicionar uma condição no objeto where
+        Object.keys(query).forEach(key => {
+            if (Array.isArray(query[key])) {
+                // Se o valor for um array, usar o operador 'IN'
+                where[key] = { [Op.in]: query[key] };
+            } else {
+                // Caso contrário, usar o operador 'LIKE' para buscas parciais
+                where[key] = { [Op.like]: `%${query[key]}%` };
+            }
+        });
+
+        // Recupera as associações definidas no modelo
+        const associations = Model.associations ? Object.values(Model.associations) : [];
+
+        // Incluir dados relacionados
+        const items = await Model.findAll({
+            where,
+            include: associations
+        });
+
+        res.status(200).json(items);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
 
-const getAll = (Model) => async (req, res) => {
+
+const create = (Model) => async (req, res) => {
     try {
-        const items = await Model.findAll();
-        res.status(200).json(items);
+        const item = await Model.create(req.body);
+        res.status(201).json(item);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
