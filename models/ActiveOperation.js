@@ -16,7 +16,13 @@ const ActiveOperation = sequelize.define('ActiveOperation', {
         defaultValue: true,
     },
 }, {
-    timestamps: true
+    timestamps: true,
+    indexes: [
+        {
+            unique: true,
+            fields: ['ParMoedaId', 'StrategyId'] // Restringe a combinação desses campos como única
+        }
+    ]
 });
 
 module.exports = ActiveOperation;

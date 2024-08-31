@@ -16,13 +16,13 @@ const getAll = (Model) => async (req, res) => {
             }
         });
 
-        // Recupera as associações definidas no modelo
-        const associations = Model.associations ? Object.values(Model.associations) : [];
+        // // Recupera as associações definidas no modelo
+        // const associations = Model.associations ? Object.values(Model.associations) : [];
 
         // Incluir dados relacionados
         const items = await Model.findAll({
             where,
-            include: associations
+            // include: associations
         });
 
         res.status(200).json(items);
@@ -31,11 +31,23 @@ const getAll = (Model) => async (req, res) => {
     }
 };
 
-
+// Create modificado para permitir a inclusão de diversos registros por vez
 const create = (Model) => async (req, res) => {
     try {
-        const item = await Model.create(req.body);
-        res.status(201).json(item);
+        let items;
+
+        // Verifique se req.body é um array
+        if (Array.isArray(req.body)) {
+            // Use bulkCreate para inserir vários itens, ignorando duplicatas
+            items = await Model.bulkCreate(req.body, {
+                ignoreDuplicates: true // Ignora registros duplicados
+            });
+        } else {
+            // Se for um único item, use create
+            items = await Model.create(req.body);
+        }
+
+        res.status(201).json(items);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
